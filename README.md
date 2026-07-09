@@ -58,27 +58,3 @@ MIT – Open source for the community.
 ```
 
 ---
-
-✅ After You Create the Repo
-
-Step Action
-1 Tap "Create repository"
-2 GitHub will generate the repo with README, .gitignore, LICENSE
-3 Go to the repo on mobile
-4 Tap "+" → "Create new file"
-5 Start adding the 22 backend files I gave you
-
-The .gitignore will automatically protect your .env and node_modules/ – so you're safe to push code.
-
----
-
-🎯 Summary – Tap These Options
-
-Option Tap This
-Public/Private ✅ Public
-Template ✅ None / Blank
-README ✅ Check it
-.gitignore ✅ Node
-License ✅ MIT License
-
----
