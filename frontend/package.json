@@ -1,4 +1,4 @@
-```json
+json
 {
   "name": "castflow-frontend",
   "version": "0.1.0",
@@ -31,4 +31,3 @@
     "typescript": "^5.3.3"
   }
 }
-```
