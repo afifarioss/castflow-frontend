@@ -1,3 +1,4 @@
+```javascript
 const { PrismaClient } = require('@prisma/client');
 
 // Singleton pattern to avoid multiple connections
@@ -23,3 +24,4 @@ process.on('SIGINT', disconnect);
 process.on('SIGTERM', disconnect);
 
 module.exports = { prisma, disconnect };
+```
