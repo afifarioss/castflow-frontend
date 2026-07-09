@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CastFlow — Decentralized Ad Protocol for Farcaster</title>
+    <meta name="description" content="Turn Farcaster casts and frames into monetizable ad inventory. Creators earn 85% of ad revenue. Brands bid on attention via real-time auctions.">
+
+    <!-- Farcaster Frame Meta Tags -->
+    <meta property="fc:frame" content="vNext" />
+    <meta property="fc:frame:image" content="https://castflow.xyz/og.png" />
+    <meta property="fc:frame:button:1" content="Launch Your First Ad" />
+    <meta property="fc:frame:button:1:action" content="link" />
+    <meta property="fc:frame:button:1:target" content="https://castflow.xyz" />
+    <meta property="fc:frame:button:2" content="View GitHub" />
+    <meta property="fc:frame:button:2:action" content="link" />
+    <meta property="fc:frame:button:2:target" content="https://github.com/afifarioss/CastFlow" />
+
+    <!-- OG Tags -->
+    <meta property="og:title" content="CastFlow — Decentralized Ad Protocol for Farcaster" />
+    <meta property="og:description" content="Turn Farcaster casts and frames into monetizable ad inventory. Creators earn 85% of ad revenue." />
+    <meta property="og:image" content="https://castflow.xyz/og.png" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           CSS RESET & BASE
+        ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #0052FF;
+            --accent-teal: #00D4AA;
+            --farcaster-purple: #855DCD;
+            --bg: #0A0B0D;
+            --surface-light: rgba(255,255,255,0.02);
+            --surface-medium: rgba(255,255,255,0.04);
+            --surface-heavy: rgba(255,255,255,0.06);
+            --text-primary: #FFFFFF;
+            --text-secondary: #8A919E;
+            --border-light: rgba(255,255,255,0.06);
+            --border-medium: rgba(255,255,255,0.1);
+            --success: #00D4AA;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+            color: inherit;
+        }
+
+        /* ============================================
+           SCROLL ANIMATIONS
+        ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ============================================
+           HEADER
+        ============================================ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(10, 11, 13, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            letter-spacing: -0.02em;
+        }
+
+        .beta-badge {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent-teal);
+            background: rgba(0, 212, 170, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .header-nav a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .header-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .wallet-btn {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            background: var(--primary-blue);
+            padding: 8px 24px;
+            border-radius: 100px;
+            transition: all 0.2s ease;
+        }
+
+        .wallet-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 82, 255, 0.3);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 11, 13, 0.98);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .mobile-overlay.active {
+            display: flex;
+        }
+
+        .mobile-overlay a {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .mobile-overlay a:hover {
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           HERO SECTION
+        ============================================ */
+        .hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,82,255,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(0, 82, 255, 0.25);
+            border-radius: 100px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6B9FFF;
+            margin-bottom: 32px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-teal);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .hero-headline {
+            font-size: clamp(48px, 6vw, 72px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-headline .gradient-text {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .hero-ctas {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: var(--primary-blue);
+            padding: 14px 28px;
+            border-radius: 100px;
+            box-shadow: 0 0 30px rgba(0, 82, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(0, 82, 255, 0.5);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px 28px;
+            border-radius: 100px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 24px 16px;
+            border-right: 1px solid var(--border-light);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        /* ============================================
+           SECTION BASE
+        ============================================ */
+        .section {
+            padding: 80px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-teal);
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            padding: 6px 12px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+
+        .section-headline {
+            font-size: clamp(32px, 4vw, 48px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .section-sub {
+            font-size: 16px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* ============================================
+           REVENUE SPLIT SECTION
+        ============================================ */
+        .revenue-cards {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 40px;
+        }
+
+        .revenue-card {
+            flex: 1;
+            background: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .revenue-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-medium);
+        }
+
+        .revenue-card .pct {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 4px;
+        }
+
+        .revenue-card:nth-child(1) .pct {
+            background: linear-gradient(135deg, var(--primary-blue), #4A8CFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .revenue-card:nth-child(2) .pct {
+            background: linear-gradient(135deg, var(--accent-teal), #4AE8C4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .revenue-card:nth-child(3) .pct {
+            background: linear-gradient(135deg, var(--farcaster-purple), #B794F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .revenue-card .label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .revenue-card .desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Revenue Bar */
+        .revenue-bar {
+            width: 100%;
+            max-width: 800px;
+            height: 8px;
+            background: var(--surface-heavy);
+            border-radius: 100px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .revenue-segment {
+            height: 100%;
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+
+        .revenue-segment.blue { background: var(--primary-blue); }
+        .revenue-segment.teal { background: var(--accent-teal); }
+        .revenue-segment.purple { background: var(--farcaster-purple); }
+
+        /* ============================================
+           FEATURES SECTION
+        ============================================ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .feature-card {
+            background: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 28px;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 82, 255, 0.2);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon.blue { background: rgba(0, 82, 255, 0.15); }
+        .feature-icon.teal { background: rgba(0, 212, 170, 0.15); }
+        .feature-icon.purple { background: rgba(133, 93, 205, 0.15); }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           ARCHITECTURE SECTION
+        ============================================ */
+        .arch-stack {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .arch-layer {
+            width: 100%;
+            background: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .arch-layer:hover {
+            border-color: rgba(0, 82, 255, 0.2);
+        }
+
+        .arch-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .arch-icon.blue { background: rgba(0, 82, 255, 0.15); }
+        .arch-icon.teal { background: rgba(0, 212, 170, 0.15); }
+        .arch-icon.purple { background: rgba(133, 93, 205, 0.15); }
+
+        .arch-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .arch-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .arch-arrow {
+            font-size: 24px;
+            color: var(--text-secondary);
+            padding: 8px 0;
+            line-height: 1;
+        }
+
+        /* ============================================
+           TECH STACK SECTION
+        ============================================ */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .tech-item {
+            background: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-medium);
+        }
+
+        .tech-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto 12px;
+        }
+
+        .tech-logo.blue { background: var(--primary-blue); }
+        .tech-logo.teal { background: var(--accent-teal); }
+        .tech-logo.purple { background: var(--farcaster-purple); }
+
+        .tech-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .tech-role {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           MOCK FRAME SECTION
+        ============================================ */
+        .frame-mockup {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .frame-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px;
+        }
+
+        .frame-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .frame-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .frame-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
+        .frame-image {
+            height: 200px;
+            background: linear-gradient(135deg, rgba(0,82,255,0.2), rgba(0,212,170,0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .frame-body {
+            padding: 16px;
+        }
+
+        .frame-badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-teal);
+            background: rgba(0, 212, 170, 0.2);
+            padding: 4px 10px;
+            border-radius: 100px;
+            margin-bottom: 12px;
+        }
+
+        .frame-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .frame-btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .frame-btn-primary {
+            background: var(--primary-blue);
+            color: #fff;
+        }
+
+        .frame-btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 82, 255, 0.3);
+        }
+
+        .frame-btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .frame-btn-secondary:hover {
+            border-color: var(--border-medium);
+        }
+
+        .frame-footer {
+            text-align: center;
+            padding: 0 16px 16px;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           DEVELOPERS SECTION
+        ============================================ */
+        .dev-cards {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 32px;
+        }
+
+        .dev-card {
+            flex: 1;
+            background: var(--surface-light);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .dev-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 82, 255, 0.2);
+        }
+
+        .dev-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .dev-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .dev-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-teal);
+            margin-bottom: 8px;
+        }
+
+        .dev-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .code-block {
+            width: 100%;
+            max-width: 700px;
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .code-block .code-keyword { color: #c678dd; }
+        .code-block .code-string { color: #98c379; }
+        .code-block .code-number { color: #d19a66; }
+        .code-block .code-comment { color: #5c6370; font-style: italic; }
+        .code-block .code-function { color: #61afef; }
+        .code-block .code-import { color: #c678dd; }
+
+        /* ============================================
+           CTA SECTION
+        ============================================ */
+        .cta-section {
+            position: relative;
+            padding: 100px 24px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .cta-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(0,82,255,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-headline {
+            position: relative;
+            font-size: 56px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .cta-sub {
+            position: relative;
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary-blue), #0040CC);
+            padding: 16px 48px;
+            border-radius: 100px;
+            box-shadow: 0 0 40px rgba(0, 82, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 60px rgba(0, 82, 255, 0.5);
+        }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
+        .footer {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-copy {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 1199px) {
+            .tech-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .header-nav,
+            .wallet-btn {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 100px 20px 60px;
+            }
+
+            .hero-headline {
+                font-size: clamp(36px, 10vw, 48px);
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-bar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-item {
+                border-right: none;
+                border-bottom: 1px solid var(--border-light);
+                padding: 16px;
+            }
+
+            .stat-item:nth-child(1),
+            .stat-item:nth-child(2) {
+                border-bottom: 1px solid var(--border-light);
+            }
+
+            .stat-item:nth-child(3),
+            .stat-item:nth-child(4) {
+                border-bottom: none;
+            }
+
+            .section {
+                padding: 60px 20px;
+            }
+
+            .revenue-cards {
+                flex-direction: column;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dev-cards {
+                flex-direction: column;
+            }
+
+            .cta-headline {
+                font-size: 36px;
+            }
+
+            .cta-section {
+                padding: 80px 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         HEADER
+    ============================================ -->
+    <header class="header">
+        <div class="header-left">
+            <span class="logo">CastFlow</span>
+            <span class="beta-badge">&#946;</span>
+        </div>
+
+        <nav class="header-nav">
+            <a href="#" target="_blank" rel="noopener">Docs</a>
+            <a href="https://github.com/afifarioss/CastFlow" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://warpcast.com" target="_blank" rel="noopener">Warpcast</a>
+        </nav>
+
+        <button class="wallet-btn">Connect Wallet</button>
+
+        <div class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <div class="mobile-overlay" id="mobileOverlay">
+        <a href="#" target="_blank" rel="noopener">Docs</a>
+        <a href="https://github.com/afifarioss/CastFlow" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://warpcast.com" target="_blank" rel="noopener">Warpcast</a>
+        <button class="wallet-btn" style="display:inline-flex;">Connect Wallet</button>
+    </div>
+
+    <!-- ============================================
+         HERO
+    ============================================ -->
+    <section class="hero" id="hero">
+        <div class="hero-grid" id="heroGrid"></div>
+        <div class="hero-glow"></div>
+
+        <div class="hero-content">
+            <div class="hero-badge reveal">
+                <span class="pulse-dot"></span>
+                <span>Audited & Ready — Deploy on Base</span>
+            </div>
+
+            <h1 class="hero-headline reveal reveal-delay-1">
+                Turn Casts Into<br><span class="gradient-text">Revenue</span>
+            </h1>
+
+            <p class="hero-sub reveal reveal-delay-2">
+                The decentralized ad protocol for Farcaster. Creators earn 85% of ad revenue. Brands bid on attention. Users get paid to engage.
+            </p>
+
+            <div class="hero-ctas reveal reveal-delay-3">
+                <a href="#" class="btn-primary">
+                    Launch Your First Ad <span>&#8594;</span>
+                </a>
+                <a href="https://github.com/afifarioss/CastFlow" class="btn-secondary" target="_blank" rel="noopener">
+                    View GitHub
+                </a>
+            </div>
+        </div>
+
+        <div class="stats-bar reveal reveal-delay-4">
+            <div class="stat-item">
+                <div class="stat-number" data-target="13.07" data-prefix="$" data-suffix="B+">$0B+</div>
+                <div class="stat-label">Base TVL</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="382.5" data-prefix="" data-suffix="K+">0K+</div>
+                <div class="stat-label">Daily Active Addresses</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="85" data-prefix="" data-suffix="%">0%</div>
+                <div class="stat-label">Creator Share</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="0.02" data-prefix="$" data-suffix="">$0.00</div>
+                <div class="stat-label">Avg Gas</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         REVENUE SPLIT
+    ============================================ -->
+    <section class="section" id="revenue">
+        <span class="section-tag reveal">Revenue Model</span>
+        <h2 class="section-headline reveal reveal-delay-1">Fair by design</h2>
+        <p class="section-sub reveal reveal-delay-2">
+            Industry-leading revenue split that puts creators first. No hidden fees, no platform lock-in.
+        </p>
+
+        <div class="revenue-cards">
+            <div class="revenue-card reveal reveal-delay-1">
+                <div class="pct">85%</div>
+                <div class="label">Creator</div>
+                <div class="desc">Direct earnings from ad auctions on their casts and frames</div>
+            </div>
+            <div class="revenue-card reveal reveal-delay-2">
+                <div class="pct">10%</div>
+                <div class="label">Protocol Treasury</div>
+                <div class="desc">Sustainability, security audits, and ongoing development</div>
+            </div>
+            <div class="revenue-card reveal reveal-delay-3">
+                <div class="pct">5%</div>
+                <div class="label">Ecosystem Fund</div>
+                <div class="desc">Grants for Farcaster builders and public goods</div>
+            </div>
+        </div>
+
+        <div class="revenue-bar reveal" id="revenueBar">
+            <div class="revenue-segment blue" data-width="85"></div>
+            <div class="revenue-segment teal" data-width="10"></div>
+            <div class="revenue-segment purple" data-width="5"></div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FEATURES
+    ============================================ -->
+    <section class="section" id="features">
+        <span class="section-tag reveal">Features</span>
+        <h2 class="section-headline reveal reveal-delay-1">Monetize every interaction</h2>
+        <p class="section-sub reveal reveal-delay-2">
+            Four powerful primitives that turn Farcaster into a sustainable creator economy.
+        </p>
+
+        <div class="features-grid">
+            <div class="feature-card reveal reveal-delay-1">
+                <div class="feature-icon blue">&#127919;</div>
+                <h3 class="feature-title">Ad-Enhanced Frames</h3>
+                <p class="feature-desc">Embed targeted ads directly into Farcaster Frames. Creators monetize interactive content without breaking the user experience.</p>
+            </div>
+            <div class="feature-card reveal reveal-delay-2">
+                <div class="feature-icon teal">&#9889;</div>
+                <h3 class="feature-title">Cast Ad-Slot Auctions</h3>
+                <p class="feature-desc">Real-time Vickrey auctions for cast attention. Brands bid on specific audiences, creators maximize yield.</p>
+            </div>
+            <div class="feature-card reveal reveal-delay-3">
+                <div class="feature-icon purple">&#128176;</div>
+                <h3 class="feature-title">Opt-In Earn Feed</h3>
+                <p class="feature-desc">Users choose to see ads and earn USDC for their attention. Privacy-preserving with Phala Network TEE.</p>
+            </div>
+            <div class="feature-card reveal reveal-delay-4">
+                <div class="feature-icon blue">&#128295;</div>
+                <h3 class="feature-title">Frame Royalties</h3>
+                <p class="feature-desc">Frame developers earn passive income every time their templates are used for ad-enhanced content.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         ARCHITECTURE
+    ============================================ -->
+    <section class="section" id="architecture">
+        <span class="section-tag reveal">Architecture</span>
+        <h2 class="section-headline reveal reveal-delay-1">Built for scale</h2>
+        <p class="section-sub reveal reveal-delay-2">
+            Enterprise-grade infrastructure meeting decentralized ideals. Fast, private, and censorship-resistant.
+        </p>
+
+        <div class="arch-stack">
+            <div class="arch-layer reveal reveal-delay-1">
+                <div class="arch-icon blue">&#9939;</div>
+                <div>
+                    <div class="arch-title">Base Settlement Layer</div>
+                    <div class="arch-desc">Solidity smart contracts on Base L2. USDC payments, auction engine, rev share.</div>
+                </div>
+            </div>
+            <div class="arch-arrow reveal">&#8595;</div>
+            <div class="arch-layer reveal reveal-delay-2">
+                <div class="arch-icon teal">&#128274;</div>
+                <div>
+                    <div class="arch-title">Phala Network TEE</div>
+                    <div class="arch-desc">Confidential ad targeting &amp; matching. Zero-knowledge proof of engagement.</div>
+                </div>
+            </div>
+            <div class="arch-arrow reveal">&#8595;</div>
+            <div class="arch-layer reveal reveal-delay-3">
+                <div class="arch-icon purple">&#128451;</div>
+                <div>
+                    <div class="arch-title">Node.js + Prisma Backend</div>
+                    <div class="arch-desc">Express API with PostgreSQL. Neynar integration, MBD.xyz moderation.</div>
+                </div>
+            </div>
+            <div class="arch-arrow reveal">&#8595;</div>
+            <div class="arch-layer reveal reveal-delay-4">
+                <div class="arch-icon blue">&#128444;</div>
+                <div>
+                    <div class="arch-title">Next.js + Frames Frontend</div>
+                    <div class="arch-desc">Interactive Farcaster Frames. Real-time auction UI, creator dashboard.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         TECH STACK
+    ============================================ -->
+    <section class="section" id="tech">
+        <span class="section-tag reveal">Technology</span>
+        <h2 class="section-headline reveal reveal-delay-1">Best-in-class stack</h2>
+        <p class="section-sub reveal reveal-delay-2">
+            Every component chosen for performance, security, and ecosystem alignment.
+        </p>
+
+        <div class="tech-grid">
+            <div class="tech-item reveal reveal-delay-1">
+                <div class="tech-logo blue">B</div>
+                <div class="tech-name">Base</div>
+                <div class="tech-role">L2 Settlement</div>
+            </div>
+            <div class="tech-item reveal reveal-delay-1">
+                <div class="tech-logo teal">$</div>
+                <div class="tech-name">USDC</div>
+                <div class="tech-role">Payment Token</div>
+            </div>
+            <div class="tech-item reveal reveal-delay-2">
+                <div class="tech-logo purple">N</div>
+                <div class="tech-name">Neynar</div>
+                <div class="tech-role">Farcaster Data</div>
+            </div>
+            <div class="tech-item reveal reveal-delay-2">
+                <div class="tech-logo blue">P</div>
+                <div class="tech-name">Phala</div>
+                <div class="tech-role">TEE Privacy</div>
+            </div>
+            <div class="tech-item reveal reveal-delay-3">
+                <div class="tech-logo teal">M</div>
+                <div class="tech-name">MBD.xyz</div>
+                <div class="tech-role">Content Moderation</div>
+            </div>
+            <div class="tech-item reveal reveal-delay-3">
+                <div class="tech-logo purple">F</div>
+                <div class="tech-name">Foundry</div>
+                <div class="tech-role">Smart Contracts</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         MOCK FRAME
+    ============================================ -->
+    <section class="section" id="preview">
+        <span class="section-tag reveal">See it in action</span>
+        <h3 class="section-headline reveal reveal-delay-1" style="font-size: clamp(24px, 3vw, 32px);">Your first sponsored cast</h3>
+
+        <div class="frame-mockup reveal reveal-delay-2">
+            <div class="frame-header">
+                <div class="frame-avatar">A</div>
+                <span class="frame-name">alice.base.eth</span>
+                <span class="frame-time">2m ago</span>
+            </div>
+            <div class="frame-image">Sponsored Content</div>
+            <div class="frame-body">
+                <div class="frame-badge">Sponsored &#8226; 0.05 USDC</div>
+                <div class="frame-actions">
+                    <button class="frame-btn frame-btn-primary">Watch &amp; Earn</button>
+                    <button class="frame-btn frame-btn-secondary">Skip</button>
+                </div>
+            </div>
+            <div class="frame-footer">Powered by CastFlow &#8226; Verified on Base</div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         DEVELOPERS
+    ============================================ -->
+    <section class="section" id="developers">
+        <span class="section-tag reveal">Developers</span>
+        <h2 class="section-headline reveal reveal-delay-1">Build on CastFlow</h2>
+        <p class="section-sub reveal reveal-delay-2">
+            Integrate CastFlow into your Farcaster app in minutes. Everything is open source and MIT licensed.
+        </p>
+
+        <div class="dev-cards">
+            <div class="dev-card reveal reveal-delay-1">
+                <div class="dev-icon">&#128230;</div>
+                <div class="dev-title">SDK</div>
+                <div class="dev-link">npm install castflow-sdk</div>
+                <div class="dev-desc">Use our TypeScript SDK to create ad slots, place bids, and track earnings.</div>
+            </div>
+            <div class="dev-card reveal reveal-delay-2">
+                <div class="dev-icon">&#128196;</div>
+                <div class="dev-title">Docs</div>
+                <div class="dev-link">Read the docs</div>
+                <div class="dev-desc">Comprehensive guides for creators, advertisers, and integrators.</div>
+            </div>
+            <div class="dev-card reveal reveal-delay-3">
+                <div class="dev-icon">&#128279;</div>
+                <div class="dev-title">GitHub</div>
+                <div class="dev-link">View the repo</div>
+                <div class="dev-desc">MIT licensed. Fork, contribute, and build your own primitives.</div>
+            </div>
+        </div>
+
+        <div class="code-block reveal">
+            <pre><span class="code-keyword">import</span> { <span class="code-function">createAdSlot</span>, <span class="code-function">placeBid</span> } <span class="code-keyword">from</span> <span class="code-string">'castflow-sdk'</span>;
+
+<span class="code-comment">// Create an ad slot on your cast</span>
+<span class="code-keyword">const</span> slot = <span class="code-keyword">await</span> <span class="code-function">createAdSlot</span>({
+  castHash: <span class="code-string">'0x123...'</span>,
+  reservePrice: <span class="code-number">10</span>, <span class="code-comment">// USDC</span>
+  expiresAt: <span class="code-string">'2026-07-15'</span>
+});
+
+<span class="code-comment">// Place a bid</span>
+<span class="code-keyword">await</span> <span class="code-function">placeBid</span>({
+  slotId: slot.id,
+  amount: <span class="code-number">15</span> <span class="code-comment">// USDC</span>
+});</pre>
+        </div>
+    </section>
+
+    <!-- ============================================
+         CTA
+    ============================================ -->
+    <section class="cta-section" id="cta">
+        <div class="cta-glow"></div>
+        <h2 class="cta-headline reveal">Ready to monetize?</h2>
+        <p class="cta-sub reveal reveal-delay-1">
+            Join the creators and brands already turning Farcaster attention into onchain revenue.
+        </p>
+        <a href="#" class="cta-btn reveal reveal-delay-2">
+            Start Building <span>&#8594;</span>
+        </a>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+    ============================================ -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://github.com/afifarioss/CastFlow" target="_blank" rel="noopener">GitHub</a>
+            <a href="#" target="_blank" rel="noopener">Docs</a>
+            <a href="https://warpcast.com" target="_blank" rel="noopener">Warpcast</a>
+            <a href="#" target="_blank" rel="noopener">Discord</a>
+        </div>
+        <p class="footer-copy">&copy; 2026 CastFlow Protocol. Built on Base. Powered by Farcaster.</p>
+    </footer>
+
+    <!-- ============================================
+         JAVASCRIPT
+    ============================================ -->
+    <script>
+        // ============================================
+        // IntersectionObserver for scroll animations
+        // ============================================
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.2
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // ============================================
+        // Stat counter animation
+        // ============================================
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseFloat(el.dataset.target);
+                    const prefix = el.dataset.prefix || '';
+                    const suffix = el.dataset.suffix || '';
+                    const duration = 2000;
+                    const startTime = performance.now();
+
+                    function update(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const current = target * eased;
+
+                        if (target < 1) {
+                            el.textContent = prefix + current.toFixed(2) + suffix;
+                        } else if (target < 100) {
+                            el.textContent = prefix + Math.round(current) + suffix;
+                        } else {
+                            el.textContent = prefix + current.toFixed(target % 1 !== 0 ? 1 : 0) + suffix;
+                        }
+
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        } else {
+                            if (target < 1) {
+                                el.textContent = prefix + target.toFixed(2) + suffix;
+                            } else if (target < 100) {
+                                el.textContent = prefix + Math.round(target) + suffix;
+                            } else {
+                                el.textContent = prefix + target.toFixed(target % 1 !== 0 ? 1 : 0) + suffix;
+                            }
+                        }
+                    }
+
+                    requestAnimationFrame(update);
+                    statObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.stat-number').forEach(el => {
+            statObserver.observe(el);
+        });
+
+        // ============================================
+        // Revenue bar animation
+        // ============================================
+        const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    bar.querySelectorAll('.revenue-segment').forEach(segment => {
+                        const width = segment.dataset.width;
+                        segment.style.width = width + '%';
+                    });
+                    barObserver.unobserve(bar);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        const revenueBar = document.getElementById('revenueBar');
+        if (revenueBar) {
+            barObserver.observe(revenueBar);
+        }
+
+        // ============================================
+        // Mouse parallax on hero grid
+        // ============================================
+        const heroGrid = document.getElementById('heroGrid');
+        const hero = document.getElementById('hero');
+
+        if (hero && heroGrid) {
+            hero.addEventListener('mousemove', (e) => {
+                const rect = hero.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                heroGrid.style.transform = `translate(${x * -10}px, ${y * -10}px)`;
+            });
+        }
+
+        // ============================================
+        // Mobile hamburger menu
+        // ============================================
+        const hamburger = document.getElementById('hamburger');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        if (hamburger && mobileOverlay) {
+            hamburger.addEventListener('click', () => {
+                mobileOverlay.classList.toggle('active');
+            });
+
+            mobileOverlay.querySelectorAll('a, button').forEach(el => {
+                el.addEventListener('click', () => {
+                    mobileOverlay.classList.remove('active');
+                });
+            });
+        }
+
+        // ============================================
+        // Header scroll effect
+        // ============================================
+        const header = document.querySelector('.header');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 50) {
+                header.style.background = 'rgba(10, 11, 13, 0.95)';
+            } else {
+                header.style.background = 'rgba(10, 11, 13, 0.85)';
+            }
+
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
