@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CampaignStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  REFUNDED
+}
+
+enum AuctionType {
+  DUTCH
+  SEALED
+}
+
+enum SlotStatus {
+  OPEN
+  AUCTIONING
+  SOLD
+  EXPIRED
+}
+
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  VERIFIED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  fid          Int      @unique
+  walletAddress String  @unique
+  username     String
+  displayName  String?
+  pfpUrl       String?
+  createdAt    DateTime @default(now())
+
+  // relations
+  slots        AdSlot[]
+  campaigns    AdCampaign[] @relation("advertiser")
+  royalties    Royalty[]    @relation("frameAuthor")
+}
+
+model AdCampaign {
+  id             String         @id @default(cuid())
+  advertiserId   String
+  advertiser     User           @relation("advertiser", fields: [advertiserId], references: [id])
+  creativeUrl    String         // IPFS/Arweave hash
+  budgetUsdc     Decimal        @db.Decimal(18,6)
+  spentUsdc      Decimal        @default(0) @db.Decimal(18,6)
+  status         CampaignStatus @default(DRAFT)
+  targeting      Json?          // JSON targeting rules
+  startTime      DateTime?
+  endTime        DateTime?
+  contractAdId   Int            @unique // on-chain id
+  createdAt      DateTime       @default(now())
+
+  deliveries     AdDelivery[]
+  royalties      Royalty[]
+}
+
+model AdSlot {
+  id                 String      @id @default(cuid())
+  creatorId          String
+  creator            User        @relation(fields: [creatorId], references: [id])
+  castHash           String      // Farcaster cast hash
+  frameUrl           String?     // Optional Frame URL
+  auctionType        AuctionType @default(DUTCH)
+  startingPrice      Decimal     @db.Decimal(18,6)
+  reservePrice       Decimal     @db.Decimal(18,6)
+  currentPrice       Decimal     @db.Decimal(18,6)
+  status             SlotStatus  @default(OPEN)
+  contractAuctionId  Int         @unique
+  createdAt          DateTime    @default(now())
+  expiresAt          DateTime
+
+  deliveries         AdDelivery[]
+}
+
+model AdDelivery {
+  id           String         @id @default(cuid())
+  campaignId   String
+  campaign     AdCampaign     @relation(fields: [campaignId], references: [id])
+  slotId       String
+  slot         AdSlot         @relation(fields: [slotId], references: [id])
+  impressions  Int            @default(0)
+  clicks       Int            @default(0)
+  revenueUsdc  Decimal        @db.Decimal(18,6)
+  status       DeliveryStatus @default(PENDING)
+  deliveredAt  DateTime?
+}
+
+model Royalty {
+  id            String   @id @default(cuid())
+  frameAuthorId String
+  frameAuthor   User     @relation("frameAuthor", fields: [frameAuthorId], references: [id])
+  campaignId    String
+  campaign      AdCampaign @relation(fields: [campaignId], references: [id])
+  amountUsdc    Decimal  @db.Decimal(18,6)
+  claimed       Boolean  @default(false)
+  claimedAt     DateTime?
+  createdAt     DateTime @default(now())
+}
