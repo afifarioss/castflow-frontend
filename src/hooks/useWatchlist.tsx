@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react'
+'use client'
+
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 export interface WatchlistedToken {
   address: string
@@ -8,7 +10,18 @@ export interface WatchlistedToken {
   addedAt?: number
 }
 
-export function useWatchlist() {
+interface WatchlistContextType {
+  watchlist: WatchlistedToken[]
+  addToken: (token: WatchlistedToken) => void
+  removeToken: (address: string) => void
+  isWatchlisted: (address: string) => boolean
+  loading: boolean
+  count: number
+}
+
+const WatchlistContext = createContext<WatchlistContextType | undefined>(undefined)
+
+export function WatchlistProvider({ children }: { children: ReactNode }) {
   const [watchlist, setWatchlist] = useState<WatchlistedToken[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -49,12 +62,19 @@ export function useWatchlist() {
     return watchlist.some((t) => t.address.toLowerCase() === address.toLowerCase())
   }
 
-  return {
-    watchlist,
-    addToken,
-    removeToken,
-    isWatchlisted,
-    loading,
-    count: watchlist.length,
+  return (
+    <WatchlistContext.Provider
+      value={{ watchlist, addToken, removeToken, isWatchlisted, loading, count: watchlist.length }}
+    >
+      {children}
+    </WatchlistContext.Provider>
+  )
+}
+
+export function useWatchlist() {
+  const context = useContext(WatchlistContext)
+  if (!context) {
+    throw new Error('useWatchlist must be used within a WatchlistProvider')
   }
+  return context
 }

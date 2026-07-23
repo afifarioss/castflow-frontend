@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { useWatchlist } from '@/hooks/useWatchlist'
+import { WatchlistProvider, useWatchlist } from '@/hooks/useWatchlist'
 import { WatchlistTab } from '@/components/WatchlistTab'
 import { WatchlistButton } from '@/components/WatchlistButton'
 
-// Mock portfolio data (replace with real data from your API)
 const mockPortfolioTokens = [
   {
     address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -33,15 +32,14 @@ const mockPortfolioTokens = [
   },
 ]
 
-export default function FramePage() {
+function FrameContent() {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'watchlist'>('portfolio')
-  const { watchlist, count } = useWatchlist()
+  const { count } = useWatchlist()
 
   return (
     <div className="min-h-screen bg-black text-white p-4">
       <h1 className="text-2xl font-bold mb-6">CastFlow Portfolio</h1>
 
-      {/* Tabs */}
       <div className="flex gap-4 mb-6 border-b border-gray-700">
         <button
           onClick={() => setActiveTab('portfolio')}
@@ -65,7 +63,6 @@ export default function FramePage() {
         </button>
       </div>
 
-      {/* Tab Content */}
       {activeTab === 'portfolio' ? (
         <div className="space-y-2">
           {mockPortfolioTokens.map((token) => (
@@ -81,9 +78,7 @@ export default function FramePage() {
                 <p className="font-semibold">${token.usdValue}</p>
                 <p
                   className={`text-xs ${
-                    token.change24h.includes('-')
-                      ? 'text-red-400'
-                      : 'text-green-400'
+                    token.change24h.includes('-') ? 'text-red-400' : 'text-green-400'
                   }`}
                 >
                   {token.change24h}
@@ -97,5 +92,13 @@ export default function FramePage() {
         <WatchlistTab allTokens={mockPortfolioTokens} />
       )}
     </div>
+  )
+}
+
+export default function FramePage() {
+  return (
+    <WatchlistProvider>
+      <FrameContent />
+    </WatchlistProvider>
   )
 }
