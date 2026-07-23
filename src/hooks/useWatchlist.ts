@@ -5,7 +5,7 @@ export interface WatchlistedToken {
   symbol: string
   name: string
   logo?: string
-  addedAt: number
+  addedAt?: number
 }
 
 export function useWatchlist() {
