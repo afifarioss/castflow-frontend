@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     const balances: TokenBalance[] = (balancesData.result?.tokenBalances || [])
       .filter((t: TokenBalance) => t.tokenBalance !== "0x0000000000000000000000000000000000000000000000000000000000000000")
 
-    // 2. Get metadata for each token (name, symbol, decimals)
+    // 2. Get metadata for each token
     const tokensWithMeta = await Promise.all(
       balances.slice(0, 25).map(async (token) => {
         try {
@@ -81,11 +81,50 @@ export async function GET(req: NextRequest) {
       })
     )
 
-    const validTokens = tokensWithMeta.filter(Boolean)
+    const validTokens = tokensWithMeta.filter(
+      (t): t is NonNullable<typeof t> => t !== null
+    )
+
+    // 3. Get prices for all tokens in one batch call (Alchemy Prices API, by symbol)
+    let priceMap: Record<string, { price: number; change24h: number }> = {}
+    try {
+      const symbols = validTokens.map((t) => t.symbol).filter((s) => s !== "???")
+      if (symbols.length > 0) {
+        const priceRes = await fetch(
+          `https://api.g.alchemy.com/prices/v1/${ALCHEMY_KEY}/tokens/by-symbol?${symbols
+            .map((s) => `symbols=${encodeURIComponent(s)}`)
+            .join("&")}`
+        )
+        if (priceRes.ok) {
+          const priceData = await priceRes.json()
+          for (const entry of priceData.data || []) {
+            const usdPrice = entry.prices?.find((p: { currency: string }) => p.currency === "usd")
+            if (usdPrice) {
+              priceMap[entry.symbol] = {
+                price: parseFloat(usdPrice.value),
+                change24h: 0, // Alchemy Prices API (current) doesn't return 24h change directly
+              }
+            }
+          }
+        }
+      }
+    } catch (priceErr) {
+      console.error("Price fetch failed (non-fatal):", priceErr)
+    }
+
+    const tokensWithPrices = validTokens.map((token) => {
+      const priceInfo = priceMap[token.symbol]
+      const usdValue = priceInfo ? (parseFloat(token.balance) * priceInfo.price).toFixed(2) : undefined
+      return {
+        ...token,
+        usdValue,
+        change24h: priceInfo ? `${priceInfo.change24h >= 0 ? "+" : ""}${priceInfo.change24h.toFixed(1)}%` : undefined,
+      }
+    })
 
     return NextResponse.json({
       address,
-      tokens: validTokens,
+      tokens: tokensWithPrices,
       lastUpdated: new Date().toISOString(),
     })
   } catch (error) {
