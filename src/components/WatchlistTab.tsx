@@ -10,7 +10,7 @@ interface TokenWithPrice {
   balance: string
   usdValue?: string
   change24h?: string
-  logo?: string
+  logo?: string | null
 }
 
 interface WatchlistTabProps {
