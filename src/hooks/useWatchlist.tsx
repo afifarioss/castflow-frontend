@@ -6,7 +6,7 @@ export interface WatchlistedToken {
   address: string
   symbol: string
   name: string
-  logo?: string
+  logo?: string | null
   addedAt?: number
 }
 
