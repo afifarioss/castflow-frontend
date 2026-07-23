@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY || process.env.NEXT_PUBLIC_ALCHEMY_KEY
+const BASE_CHAIN = "base"
 
 interface TokenBalance {
   contractAddress: string
@@ -85,25 +86,30 @@ export async function GET(req: NextRequest) {
       (t): t is NonNullable<typeof t> => t !== null
     )
 
-    // 3. Get prices for all tokens in one batch call (Alchemy Prices API, by symbol)
-    let priceMap: Record<string, { price: number; change24h: number }> = {}
+    // 3. Get prices BY CONTRACT ADDRESS (not symbol) — avoids mispricing spam/scam tokens
+    // that copy real token symbols like "ETH" or "USDC"
+    let priceMap: Record<string, number> = {}
     try {
-      const symbols = validTokens.map((t) => t.symbol).filter((s) => s !== "???")
-      if (symbols.length > 0) {
+      const addressList = validTokens.map((t) => ({
+        network: BASE_CHAIN,
+        address: t.address,
+      }))
+
+      if (addressList.length > 0) {
         const priceRes = await fetch(
-          `https://api.g.alchemy.com/prices/v1/${ALCHEMY_KEY}/tokens/by-symbol?${symbols
-            .map((s) => `symbols=${encodeURIComponent(s)}`)
-            .join("&")}`
+          `https://api.g.alchemy.com/prices/v1/${ALCHEMY_KEY}/tokens/by-address`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ addresses: addressList }),
+          }
         )
         if (priceRes.ok) {
           const priceData = await priceRes.json()
           for (const entry of priceData.data || []) {
             const usdPrice = entry.prices?.find((p: { currency: string }) => p.currency === "usd")
-            if (usdPrice) {
-              priceMap[entry.symbol] = {
-                price: parseFloat(usdPrice.value),
-                change24h: 0, // Alchemy Prices API (current) doesn't return 24h change directly
-              }
+            if (usdPrice && !entry.error) {
+              priceMap[entry.address.toLowerCase()] = parseFloat(usdPrice.value)
             }
           }
         }
@@ -112,13 +118,13 @@ export async function GET(req: NextRequest) {
       console.error("Price fetch failed (non-fatal):", priceErr)
     }
 
+    // Only attach usdValue when we have a REAL, verified price for that exact contract.
+    // No fake 24h change — we don't have reliable data for it, so we don't show it.
     const tokensWithPrices = validTokens.map((token) => {
-      const priceInfo = priceMap[token.symbol]
-      const usdValue = priceInfo ? (parseFloat(token.balance) * priceInfo.price).toFixed(2) : undefined
+      const price = priceMap[token.address.toLowerCase()]
       return {
         ...token,
-        usdValue,
-        change24h: priceInfo ? `${priceInfo.change24h >= 0 ? "+" : ""}${priceInfo.change24h.toFixed(1)}%` : undefined,
+        usdValue: price !== undefined ? (parseFloat(token.balance) * price).toFixed(2) : undefined,
       }
     })
 

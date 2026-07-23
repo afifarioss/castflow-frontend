@@ -12,7 +12,6 @@ interface PortfolioToken {
   balance: string
   logo?: string | null
   usdValue?: string
-  change24h?: string
 }
 
 function FrameContent() {
@@ -124,7 +123,8 @@ function FrameContent() {
                     <p className="text-xs text-gray-400">{token.name}</p>
                   </div>
                   <div className="text-right mr-3">
-                    <p className="font-semibold">{token.balance}</p>
+                    <p className="font-semibold">{token.usdValue ? `$${token.usdValue}` : "—"}</p>
+                    <p className="text-xs text-gray-400">{token.balance} {token.symbol}</p>
                   </div>
                   <WatchlistButton token={token} />
                 </div>
