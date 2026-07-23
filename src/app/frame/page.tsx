@@ -177,6 +177,16 @@ function FrameContent() {
             <p className="text-center text-gray-500 py-8 text-sm">No tokens found for this address.</p>
           )}
           {status === 'loaded' && tokens.length > 0 && (
+            <a
+              href={`https://warpcast.com/~/compose?text=${encodeURIComponent('Check out my Base portfolio on CastFlow 🌊')}&embeds[]=${encodeURIComponent(`https://castflow-frontend.vercel.app/share/${addressInput}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg text-sm font-medium mb-4"
+            >
+              Share my Base stack 📤
+            </a>
+          )}
+          {status === 'loaded' && tokens.length > 0 && (
             <div className="space-y-2">
               {tokens.map((token) => (
                 <div
