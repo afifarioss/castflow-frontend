@@ -41,7 +41,6 @@ function FrameContent() {
   const [connecting, setConnecting] = useState(false)
   const { count } = useWatchlist()
 
-  // Frens holdings state — loads independently, never blocks the main portfolio UI
   const [frenHoldings, setFrenHoldings] = useState<Record<string, FrenTokenInfo>>({})
   const [frenTopTokens, setFrenTopTokens] = useState<{ address: string; symbol: string; name: string; count: number }[]>([])
   const [frenStatus, setFrenStatus] = useState<'idle' | 'loading' | 'error' | 'loaded'>('idle')
@@ -123,12 +122,15 @@ function FrameContent() {
     }
   }, [fetchPortfolio])
 
+  const shareCastText =
+    "I built CastFlow — a simple way to view and share your Base wallet portfolio on Farcaster. Try my portfolio below 🌊"
+
   return (
     <div className="min-h-screen bg-black text-white p-4">
       <h1 className="text-2xl font-bold mb-4">CastFlow Portfolio</h1>
 
       {/* Wallet connect + manual address input */}
-      <div className="flex flex-col gap-2 mb-3">
+      <div className="flex flex-col gap-2 mb-1">
         {walletAvailable && (
           <button
             onClick={connectWallet}
@@ -156,6 +158,11 @@ function FrameContent() {
         </div>
       </div>
 
+      {/* Trust copy — sits right under the connect controls */}
+      <p className="text-xs text-gray-500 mb-6">
+        🔒 Read-only. No wallet signature required.
+      </p>
+
       {/* Farcaster FID input for frens discovery */}
       <div className="flex gap-2 mb-6">
         <input
@@ -177,12 +184,12 @@ function FrameContent() {
       {/* Share button */}
       {status === 'loaded' && tokens.length > 0 && (
         <a
-          href={`https://warpcast.com/~/compose?text=${encodeURIComponent('Check out my Base portfolio on CastFlow 🌊')}&embeds[]=${encodeURIComponent(`https://castflow-frontend.vercel.app/share/${addressInput}`)}`}
+          href={`https://warpcast.com/~/compose?text=${encodeURIComponent(shareCastText)}&embeds[]=${encodeURIComponent(`https://castflow-frontend.vercel.app/share/${addressInput}`)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="block text-center bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded-lg text-sm font-medium mb-4"
         >
-          Share my Base stack 📤
+          Share this portfolio as a cast 📤
         </a>
       )}
 
