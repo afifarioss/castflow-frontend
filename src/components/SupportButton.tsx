@@ -11,14 +11,6 @@ const USDC_DECIMALS = 6
 
 const PRESET_AMOUNTS = [0.03, 0.1, 1] as const
 
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
-    }
-  }
-}
-
 function toUsdcUnits(amount: number): bigint {
   return BigInt(Math.round(amount * 10 ** USDC_DECIMALS))
 }
