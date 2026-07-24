@@ -26,6 +26,11 @@ export default function HomePage() {
                 I&apos;m an Advertiser
               </Button>
             </Link>
+            <Link href="/frame">
+              <Button variant="secondary" size="lg">
+                View Portfolio Tracker
+              </Button>
+            </Link>
           </div>
         </div>
 
