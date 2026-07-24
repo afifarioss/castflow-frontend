@@ -8,8 +8,9 @@ const RECIPIENT = '0x7845D45d9E53268EBFf3C4a9daBb994cE5b93918'
 const RECIPIENT_BASENAME = 'afifarioss.base.eth'
 const BASE_CHAIN_ID_HEX = '0x2105'
 const USDC_DECIMALS = 6
+const MIN_AMOUNT = 0.01
 
-const PRESET_AMOUNTS = [0.03, 0.1, 1] as const
+const PRESET_AMOUNTS = [0.03, 0.1, 1, 5] as const
 
 function toUsdcUnits(amount: number): bigint {
   return BigInt(Math.round(amount * 10 ** USDC_DECIMALS))
@@ -52,14 +53,33 @@ async function ensureBaseMainnet() {
 
 export function SupportButton() {
   const [amount, setAmount] = useState<number>(PRESET_AMOUNTS[0])
+  const [customInput, setCustomInput] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [txHash, setTxHash] = useState('')
+
+  const selectPreset = (preset: number) => {
+    setAmount(preset)
+    setCustomInput('')
+  }
+
+  const handleCustomChange = (value: string) => {
+    setCustomInput(value)
+    const parsed = parseFloat(value)
+    if (!Number.isNaN(parsed) && parsed >= MIN_AMOUNT) {
+      setAmount(parsed)
+    }
+  }
 
   const sendTip = async () => {
     if (!window.ethereum) {
       setStatus('error')
       setErrorMsg('No wallet found. Install a wallet like MetaMask or Coinbase Wallet.')
+      return
+    }
+    if (!amount || amount < MIN_AMOUNT) {
+      setStatus('error')
+      setErrorMsg(`Minimum tip is $${MIN_AMOUNT.toFixed(2)}`)
       return
     }
     setStatus('sending')
@@ -97,13 +117,13 @@ export function SupportButton() {
         </p>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         {PRESET_AMOUNTS.map((preset) => (
           <button
             key={preset}
-            onClick={() => setAmount(preset)}
+            onClick={() => selectPreset(preset)}
             className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-              amount === preset
+              amount === preset && customInput === ''
                 ? 'border-primary bg-primary/10 text-primary'
                 : 'border-white/10 text-text-secondary hover:border-white/30'
             }`}
@@ -111,6 +131,19 @@ export function SupportButton() {
             ${preset.toFixed(2)}
           </button>
         ))}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <span className="text-text-secondary text-sm">$</span>
+        <input
+          type="number"
+          min={MIN_AMOUNT}
+          step="0.01"
+          placeholder="Custom amount"
+          value={customInput}
+          onChange={(e) => handleCustomChange(e.target.value)}
+          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500"
+        />
       </div>
 
       <Button
