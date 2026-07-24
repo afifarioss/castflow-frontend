@@ -129,6 +129,11 @@ function FrameContent() {
     <div className="min-h-screen bg-black text-white p-4">
       <h1 className="text-2xl font-bold mb-4">CastFlow Portfolio</h1>
 
+<div className="bg-yellow-900/20 border border-yellow-700/40 rounded-xl p-3 mb-4 text-sm text-yellow-200">
+    📌 <span className="font-medium">Past experiment:</span> CastFlow is now a decentralized ad protocol.
+    <a href="/" className="text-yellow-400 underline ml-1">Back to the main site</a>
+</div></h1>
+
       {/* Wallet connect + manual address input */}
       <div className="flex flex-col gap-2 mb-1">
         {walletAvailable && (
