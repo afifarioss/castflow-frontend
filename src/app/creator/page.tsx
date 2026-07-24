@@ -7,7 +7,7 @@ export default function CreatorPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="max-w-2xl text-center space-y-8">
+      <div className="max-w-2xl w-full text-center space-y-8">
         <Link href="/" className="text-sm text-text-secondary hover:text-primary">
           ← CastFlow
         </Link>
@@ -22,16 +22,58 @@ export default function CreatorPage() {
         <div className="text-left space-y-4 bg-black/20 rounded-xl p-6">
           <h2 className="text-lg font-semibold text-primary">How it works</h2>
           <ol className="space-y-2 text-text-secondary text-sm list-decimal list-inside">
-            <li>List a cast sponsorship slot</li>
+            <li>Set your price for a sponsored cast</li>
             <li>Advertisers book your slot</li>
-            <li>Payment settles on Base, automatically</li>
+            <li>You publish the cast</li>
+            <li>You get paid on Base</li>
           </ol>
         </div>
 
+        {/* Mock dashboard — clearly labeled as example/demo data */}
         <div className="text-left bg-black/20 rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-accent mb-2">Example listing</h2>
-          <p className="text-text-secondary text-sm">
-            50 USDC for one sponsored cast from a Base creator.
+          <p className="text-xs text-text-secondary mb-3 uppercase tracking-wide">
+            Example data — dashboard not live yet
+          </p>
+          <h2 className="text-lg font-semibold text-accent mb-3">
+            Your slots (demo)
+          </h2>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center bg-white/5 rounded-lg p-3 text-sm">
+              <div>
+                <p className="font-medium">Sponsored Cast Slot</p>
+                <p className="text-text-secondary text-xs">50 USDC · 1 cast</p>
+              </div>
+              <span className="text-green-400 text-xs font-medium">Available</span>
+            </div>
+            <div className="flex justify-between items-center bg-white/5 rounded-lg p-3 text-sm">
+              <div>
+                <p className="font-medium">Sponsored Cast Slot</p>
+                <p className="text-text-secondary text-xs">75 USDC · 1 cast + reply</p>
+              </div>
+              <span className="text-yellow-400 text-xs font-medium">Booked</span>
+            </div>
+            <div className="flex justify-between items-center bg-white/5 rounded-lg p-3 text-sm">
+              <div>
+                <p className="text-text-secondary">Total earnings (demo)</p>
+              </div>
+              <span className="text-primary font-semibold">125 USDC</span>
+            </div>
+          </div>
+          <button
+            disabled
+            className="w-full mt-4 bg-white/5 text-text-secondary text-sm py-2 rounded-lg cursor-not-allowed"
+          >
+            List a slot (coming soon)
+          </button>
+        </div>
+
+        <div className="text-left bg-black/20 rounded-xl p-5">
+          <p className="text-xs text-primary font-semibold mb-2">
+            Why creators come back
+          </p>
+          <p className="text-sm text-text-secondary">
+            List slot → get booked → post cast → get paid → reputation
+            increases → better campaigns
           </p>
         </div>
 

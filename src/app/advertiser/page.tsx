@@ -7,7 +7,7 @@ export default function AdvertiserPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="max-w-2xl text-center space-y-8">
+      <div className="max-w-2xl w-full text-center space-y-8">
         <Link href="/" className="text-sm text-text-secondary hover:text-primary">
           ← CastFlow
         </Link>
@@ -22,16 +22,58 @@ export default function AdvertiserPage() {
         <div className="text-left space-y-4 bg-black/20 rounded-xl p-6">
           <h2 className="text-lg font-semibold text-primary">How it works</h2>
           <ol className="space-y-2 text-text-secondary text-sm list-decimal list-inside">
-            <li>Creators list cast sponsorship slots</li>
-            <li>You book a campaign</li>
-            <li>Payment settles on Base, automatically</li>
+            <li>Choose a creator</li>
+            <li>Submit your campaign brief</li>
+            <li>Funds are held in escrow</li>
+            <li>Payment releases after the cast is posted</li>
           </ol>
         </div>
 
+        {/* Mock dashboard — clearly labeled as example/demo data */}
         <div className="text-left bg-black/20 rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-accent mb-2">Example campaign</h2>
-          <p className="text-text-secondary text-sm">
-            50 USDC for one sponsored cast from a Base creator.
+          <p className="text-xs text-text-secondary mb-3 uppercase tracking-wide">
+            Example data — dashboard not live yet
+          </p>
+          <h2 className="text-lg font-semibold text-accent mb-3">
+            Your campaign (demo)
+          </h2>
+          <dl className="space-y-1.5 text-sm">
+            <div className="flex justify-between">
+              <dt className="text-text-secondary">Campaign</dt>
+              <dd>Promote Base mini app</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-text-secondary">Budget</dt>
+              <dd>100 USDC</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-text-secondary">Creator slot</dt>
+              <dd>50 USDC</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-text-secondary">Deliverable</dt>
+              <dd>1 cast</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-text-secondary">Status</dt>
+              <dd className="text-yellow-400">Awaiting creator approval</dd>
+            </div>
+          </dl>
+          <button
+            disabled
+            className="w-full mt-4 bg-white/5 text-text-secondary text-sm py-2 rounded-lg cursor-not-allowed"
+          >
+            Start a campaign (coming soon)
+          </button>
+        </div>
+
+        <div className="text-left bg-black/20 rounded-xl p-5">
+          <p className="text-xs text-accent font-semibold mb-2">
+            Why advertisers come back
+          </p>
+          <p className="text-sm text-text-secondary">
+            Create campaign → book creator → track result → save best
+            creators → relaunch
           </p>
         </div>
 
