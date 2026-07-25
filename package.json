@@ -15,7 +15,8 @@
     "next": "^15.0.0-rc.1",
     "react": "^19.0.0-rc.1",
     "react-dom": "^19.0.0-rc.1",
-    "tailwind-merge": "^2.2.0"
+    "tailwind-merge": "^2.2.0",
+    "viem": "^2.55.8"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

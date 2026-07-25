@@ -1,11 +1,11 @@
 import type { Metadata } from "next"
 
 interface Props {
-  params: { address: string }
+  params: Promise<{ address: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { address } = params
+  const { address } = await params
   const imageUrl = `https://castflow-frontend.vercel.app/api/og/portfolio?address=${address}`
 
   return {
@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function SharePage({ params }: Props) {
-  const { address } = params
+export default async function SharePage({ params }: Props) {
+  const { address } = await params
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
       <h1 className="text-2xl font-bold mb-2">CastFlow Portfolio</h1>

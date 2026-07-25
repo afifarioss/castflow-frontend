@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SlotStatus {
+  OPEN
+  BOOKED
+  EXPIRED
+}
+
+enum BookingStatus {
+  PENDING
+  DELIVERED
+}
+
+model User {
+  id            String   @id @default(cuid())
+  fid           Int      @unique
+  walletAddress String   @unique
+  username      String
+  displayName   String?
+  pfpUrl        String?
+  createdAt     DateTime @default(now())
+
+  slots    AdSlot[]
+  bookings AdBooking[] @relation("advertiser")
+}
+
+model AdSlot {
+  id              String     @id @default(cuid())
+  creatorId       String
+  creator         User       @relation(fields: [creatorId], references: [id])
+  castHash        String
+  priceEth        Decimal    @db.Decimal(18, 8)
+  durationSeconds Int
+  metadata        String
+  status          SlotStatus @default(OPEN)
+  contractSlotId  Int?       @unique // set once listSlot() confirms on-chain
+  createdAt       DateTime   @default(now())
+  expiresAt       DateTime?
+
+  bookings AdBooking[]
+}
+
+model AdBooking {
+  id            String        @id @default(cuid())
+  slotId        String
+  slot          AdSlot        @relation(fields: [slotId], references: [id])
+  advertiserId  String
+  advertiser    User          @relation("advertiser", fields: [advertiserId], references: [id])
+  priceEth      Decimal       @db.Decimal(18, 8)
+  campaignBrief String
+  txHash        String?       // payment tx, once a real payment path exists
+  status        BookingStatus @default(PENDING)
+  deliveredAt   DateTime?
+  createdAt     DateTime      @default(now())
+}
