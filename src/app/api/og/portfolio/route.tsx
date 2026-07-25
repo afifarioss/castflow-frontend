@@ -10,7 +10,9 @@ export async function GET(req: NextRequest) {
     return new Response("Missing address", { status: 400 })
   }
 
-  let tokens: { symbol: string; usdValue?: string }[] = []
+  const shortAddress = `${address.slice(0, 6)}...${address.slice(-4)}`
+
+  let tokens: { symbol: string; usdValue?: string; logo?: string | null }[] = []
   try {
     const portfolioRes = await fetch(
       `${req.nextUrl.origin}/api/portfolio?address=${address}`
@@ -41,8 +43,9 @@ export async function GET(req: NextRequest) {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "40px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px" }}>
           <span style={{ fontSize: 36, fontWeight: 700 }}>🌊 CastFlow</span>
+          <span style={{ fontSize: 22, color: "#9ca3af" }}>{shortAddress}</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", marginBottom: "40px" }}>
@@ -64,6 +67,7 @@ export async function GET(req: NextRequest) {
                 key={i}
                 style={{
                   display: "flex",
+                  alignItems: "center",
                   justifyContent: "space-between",
                   fontSize: 28,
                   padding: "12px 20px",
@@ -71,7 +75,35 @@ export async function GET(req: NextRequest) {
                   borderRadius: "12px",
                 }}
               >
-                <span>{t.symbol}</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  {t.logo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={t.logo}
+                      width={36}
+                      height={36}
+                      style={{ borderRadius: "50%" }}
+                      alt=""
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: "50%",
+                        backgroundColor: "#3f3f46",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 16,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {t.symbol.slice(0, 1)}
+                    </div>
+                  )}
+                  <span>{t.symbol}</span>
+                </div>
                 <span style={{ fontWeight: 700 }}>${t.usdValue}</span>
               </div>
             ))
