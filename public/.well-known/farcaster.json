@@ -15,7 +15,7 @@
     "splashBackgroundColor": "#0A0B0D",
     "tags": ["base", "farcaster", "miniapp", "marketplace"],
     "primaryCategory": "finance",
-    "subtitle": "Sell sponsored cast slots on Farcaster",
+    "subtitle": "Sell sponsored cast slots",
     "description": "List sponsored cast slots as a creator, or book them as an advertiser. Payments settle on Base in ETH."
   }
 }
