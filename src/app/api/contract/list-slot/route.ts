@@ -8,8 +8,7 @@ const AD_REGISTRY_ABI = [
   {
     inputs: [
       { name: 'price', type: 'uint256' },
-      { name: 'duration', type: 'uint256' },
-      { name: 'metadata', type: 'string' },
+      { name: 'description', type: 'string' },
     ],
     name: 'listSlot',
     outputs: [{ name: 'slotId', type: 'uint256' }],
@@ -20,25 +19,18 @@ const AD_REGISTRY_ABI = [
 
 export async function POST(req: NextRequest) {
   try {
-    const { price, duration, metadata } = await req.json();
+    const { price, description } = await req.json();
 
     const priceNum = Number(price);
-    const durationNum = Number(duration);
     if (isNaN(priceNum) || priceNum <= 0) {
       return NextResponse.json(
         { error: 'Price must be a positive number (in ETH).' },
         { status: 400 }
       );
     }
-    if (!Number.isInteger(durationNum) || durationNum <= 0) {
+    if (!description || description.trim().length === 0) {
       return NextResponse.json(
-        { error: 'Duration must be a positive integer (in seconds).' },
-        { status: 400 }
-      );
-    }
-    if (!metadata || metadata.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Metadata (slot description) is required.' },
+        { error: 'Description is required.' },
         { status: 400 }
       );
     }
@@ -48,8 +40,7 @@ export async function POST(req: NextRequest) {
       functionName: 'listSlot',
       args: [
         parseEther(priceNum.toString()),
-        BigInt(durationNum),
-        metadata.trim(),
+        description.trim(),
       ],
     });
 
