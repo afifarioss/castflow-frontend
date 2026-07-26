@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   },
   other: {
     "base:app_id": "6a6122b3078f6baf9ef30258",
+    "talentapp:project_verification": "c9960549d80665cd506cf9d2050147b5de34ddf55496eb62cae14d0546bc7512c3db3a487762e63b666bbf06aaa51ce63c51bf03492e5d7f8ab1e5e4a8a32095",
     "fc:miniapp": JSON.stringify({
       version: "1",
       imageUrl: `${APP_URL}/api/branding?type=preview`,
