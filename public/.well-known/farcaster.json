@@ -1,0 +1,21 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjMzMzYxMzAsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHhlQTAyODI1NmIyMTE1QjQ1MWE4ZDZhNTg4OGJFMjI5MjViMTFCN0FiIn0",
+    "payload": "eyJkb21haW4iOiJjYXN0Zmxvdy1mcm9udGVuZC52ZXJjZWwuYXBwIn0",
+    "signature": "XZESnJ0uv+QvrnRog8WOIx4ben/84aBVNGCSM5qKO7dqC5eVy2i+r0s/kbLbcw0y+SUEXTyzPl0EuAtLJ0wLPBs="
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "CastFlow",
+    "iconUrl": "https://castflow-frontend.vercel.app/api/branding?type=icon",
+    "homeUrl": "https://castflow-frontend.vercel.app",
+    "imageUrl": "https://castflow-frontend.vercel.app/api/branding?type=preview",
+    "buttonTitle": "Open CastFlow",
+    "splashImageUrl": "https://castflow-frontend.vercel.app/api/branding?type=splash",
+    "splashBackgroundColor": "#0A0B0D",
+    "tags": ["base", "farcaster", "miniapp", "marketplace"],
+    "primaryCategory": "finance",
+    "subtitle": "Sell sponsored cast slots on Farcaster",
+    "description": "List sponsored cast slots as a creator, or book them as an advertiser. Payments settle on Base in ETH."
+  }
+}
