@@ -1,59 +1,76 @@
 # CastFlow
 
-**Decentralized ad protocol on Farcaster + Base.**
+Sell sponsored cast slots on Farcaster. Get paid on Base.
 
-CastFlow turns Farcaster content into revenue. Creators earn 85% of ad revenue, protocol takes 10%, ecosystem fund gets 5%.
+CastFlow is a sponsored-cast marketplace: creators list a slot for a fixed ETH price, advertisers browse and book it, the creator posts, and payment is settled on Base. No platform fees during beta.
 
-## 🚀 Features
+**Live app:** https://castflow-frontend.vercel.app
+**Farcaster Mini App:** verified manifest at `/.well-known/farcaster.json`, launches directly inside Warpcast
+**Built by:** [@afifarioss](https://farcaster.xyz/afifarioss) — `afifarioss.base.eth`
 
-- **Ad-Enhanced Frames** – Creators monetize their Frames
-- **Cast Ad-Slot Auctions** – Brands bid on attention
-- **User Opt-In Earn Feed** – Users earn by watching ads
-- **Royalties** – Frame developers get passive income
+---
 
-## 🏗️ Architecture
+## What it does
 
-- **Smart Contracts** – Solidity on Base (Foundry)
-- **Backend** – Node.js + Express + Prisma (PostgreSQL)
-- **Frontend** – Next.js + Farcaster Frames
-- **Privacy** – Phala Network TEE for confidential ad targeting
+**For creators**
+1. Connect a wallet
+2. List a slot — set a price (ETH), duration, and description
+3. Get booked by an advertiser
+4. Post the cast, get paid
 
-## 📊 Revenue Split
+**For advertisers**
+1. Connect a wallet
+2. Browse open slots
+3. Submit a campaign brief and book at the listed price
+4. Cast goes live
 
-| Party | Share |
-|-------|-------|
-| Creator | 85% |
-| Protocol Treasury | 10% |
-| Farcaster Ecosystem Fund | 5% |
+---
 
-## 🔧 Tech Stack
+## Status: Base Sepolia (testnet), building in public
 
-- Base (L2) – Settlement
-- USDC – Payment token
-- Neynar API – Farcaster data
-- Phala Network – Privacy-preserving AI
-- MBD.xyz – Content moderation
+This project is currently deployed and tested on **Base Sepolia**, not mainnet. Everything described below is real and working — wallet connect, on-chain listing, booking, database persistence — but has not yet been deployed to Base mainnet with real funds. That migration is a near-term goal once the flow has been validated further.
 
-## 📁 Repository Structure
+Payment settlement during this beta is **manual**, not automated escrow — there is currently no on-chain escrow contract. This is stated explicitly so no one mistakes CastFlow's current state for more than it is.
 
-```
+---
 
-castflow/
-├── contracts/     # Solidity smart contracts (Phase 1)
-├── backend/       # Express + Prisma API (Phase 2)
-└── frontend/      # Next.js + Farcaster Frames (Phase 3)
+## Architecture
 
-```
+**Frontend** — Next.js 15 (App Router), Tailwind, deployed on Vercel
+- Wallet connection via raw `window.ethereum` (no wagmi dependency)
+- Direct on-chain calls to `AdRegistry.listSlot()` via `viem`
+- Transaction confirmation via receipt polling before reporting success to the user
 
-## 🔐 Owner
+**Backend** — Express + Prisma + PostgreSQL (Neon), deployed on Render
+- Tracks slots and bookings off-chain for browsing/searching
+- Simplified schema: `AdSlot` and `AdBooking`, ETH-denominated throughout
 
-**afifarioss**
-- Farcaster FID: 3336130
-- Basename: afifarioss.base.eth
-- Wallet: 0x7845D45d9E53268EBFf3C4a9daBb994cE5b93918
+**Smart contract** — Solidity, deployed via Foundry
+- `AdRegistry.sol` — `listSlot(uint256 price, uint256 duration, string metadata)`
+- Address (Base Sepolia): `0xcD9A23aAf3880CacfB4ff340CBffa513F1Ab6F7C`
 
-## 📄 License
+**Farcaster integration**
+- Verified Mini App manifest with signed `accountAssociation`
+- Dynamic OG image generation for link previews and app icon/splash (via `@vercel/og`, no static image assets needed)
 
-MIT – Open source for the community.
-```
+---
 
+## Why Base
+
+Low transaction fees and fast settlement make per-cast micropayments viable in a way they aren't on most other chains. Farcaster's user base is Base-native by convention, making it a natural fit for a creator-monetization primitive built directly for that audience.
+
+---
+
+## Roadmap
+
+- [ ] Deploy to Base mainnet once the flow is proven stable
+- [ ] On-chain escrow contract (`AdEscrow`) to replace manual payout
+- [ ] Farcaster-native identity (Sign In With Neynar) alongside wallet-only auth
+- [ ] Public discovery/browse page improvements
+- [ ] Reputation system for repeat creators and advertisers
+
+---
+
+## Tech stack
+
+Next.js · TypeScript · Tailwind CSS · viem · Express · Prisma · PostgreSQL (Neon) · Solidity · Foundry · Vercel · Render
