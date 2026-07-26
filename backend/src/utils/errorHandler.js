@@ -1,4 +1,3 @@
-```javascript
 const logger = require('./logger');
 
 function errorHandler(err, req, res, next) {
@@ -16,4 +15,3 @@ function errorHandler(err, req, res, next) {
 }
 
 module.exports = errorHandler;
-```

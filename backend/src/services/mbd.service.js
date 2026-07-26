@@ -1,4 +1,3 @@
-```javascript
 const axios = require('axios');
 
 const MBD_API_KEY = process.env.MBD_API_KEY;
@@ -45,4 +44,3 @@ async function moderateAd(creativeUrl) {
 }
 
 module.exports = { moderateAd };
-```

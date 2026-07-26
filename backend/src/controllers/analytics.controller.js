@@ -1,4 +1,3 @@
-```javascript
 const { prisma } = require('../config/database.config');
 
 // GET /api/analytics/impressions?start=&end=&creatorId=
@@ -45,4 +44,3 @@ async function getRevenue(req, res, next) {
 }
 
 module.exports = { getImpressions, getRevenue };
-```

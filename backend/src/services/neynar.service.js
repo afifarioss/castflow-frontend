@@ -1,4 +1,3 @@
-```javascript
 const axios = require('axios');
 
 const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY;
@@ -64,4 +63,3 @@ async function getFeed(fid, limit = 10) {
 }
 
 module.exports = { fetchCast, validateFid, getFeed };
-```

@@ -1,4 +1,3 @@
-```javascript
 const axios = require('axios');
 
 const PHALA_API_KEY = process.env.PHALA_CLOUD_API_KEY;
@@ -47,4 +46,3 @@ async function labelContent(content) {
 }
 
 module.exports = { labelContent };
-```

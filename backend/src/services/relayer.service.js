@@ -1,4 +1,3 @@
-```javascript
 const { prisma } = require('../config/database.config');
 
 /**
@@ -36,4 +35,3 @@ async function injectAd(frameRequest, slotId) {
 }
 
 module.exports = { injectAd };
-```

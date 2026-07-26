@@ -1,4 +1,3 @@
-```javascript
 // Placeholder addresses – replace with actual deployed contract addresses
 const CONTRACT_ADDRESSES = {
   AdRegistry: process.env.CASTFLOW_AD_REGISTRY || '0x0000000000000000000000000000000000000000',
@@ -14,4 +13,3 @@ const USDC_ADDRESSES = {
 };
 
 module.exports = { CONTRACT_ADDRESSES, USDC_ADDRESSES };
-```
