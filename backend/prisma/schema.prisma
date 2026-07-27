@@ -32,17 +32,16 @@ model User {
 }
 
 model AdSlot {
-  id              String     @id @default(cuid())
-  creatorId       String
-  creator         User       @relation(fields: [creatorId], references: [id])
-  castHash        String
-  priceEth        Decimal    @db.Decimal(18, 8)
-  durationSeconds Int
-  metadata        String
-  status          SlotStatus @default(OPEN)
-  contractSlotId  Int?       @unique // set once listSlot() confirms on-chain
-  createdAt       DateTime   @default(now())
-  expiresAt       DateTime?
+  id             String     @id @default(cuid())
+  creatorId      String
+  creator        User       @relation(fields: [creatorId], references: [id])
+  castHash       String
+  priceEth       Decimal    @db.Decimal(18, 8)
+  metadata       String
+  status         SlotStatus @default(OPEN)
+  contractSlotId Int?       @unique
+  createdAt      DateTime   @default(now())
+  expiresAt      DateTime?
 
   bookings AdBooking[]
 }
@@ -55,7 +54,7 @@ model AdBooking {
   advertiser    User          @relation("advertiser", fields: [advertiserId], references: [id])
   priceEth      Decimal       @db.Decimal(18, 8)
   campaignBrief String
-  txHash        String?       // payment tx, once a real payment path exists
+  txHash        String?
   status        BookingStatus @default(PENDING)
   deliveredAt   DateTime?
   createdAt     DateTime      @default(now())

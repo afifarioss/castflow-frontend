@@ -1,16 +1,12 @@
 const { prisma } = require('../config/database.config');
 const { validateFid } = require('../services/neynar.service');
 
-// POST /api/creator/slot
 async function createSlot(req, res, next) {
   try {
-    const { fid, walletAddress, castHash, priceEth, durationSeconds, metadata, expiresAt } = req.body;
+    const { fid, walletAddress, castHash, priceEth, metadata, expiresAt } = req.body;
 
     if (!priceEth || Number(priceEth) <= 0) {
       return res.status(400).json({ error: 'priceEth must be greater than 0' });
-    }
-    if (!durationSeconds || !Number.isInteger(durationSeconds) || durationSeconds <= 0) {
-      return res.status(400).json({ error: 'durationSeconds must be a positive integer' });
     }
     if (!metadata || typeof metadata !== 'string' || !metadata.trim()) {
       return res.status(400).json({ error: 'metadata is required' });
@@ -33,7 +29,6 @@ async function createSlot(req, res, next) {
         creatorId: user.id,
         castHash,
         priceEth,
-        durationSeconds,
         metadata: metadata.trim(),
         expiresAt: expiresAt ? new Date(expiresAt) : null,
       },
@@ -45,7 +40,6 @@ async function createSlot(req, res, next) {
   }
 }
 
-// GET /api/creator/earnings/:fid
 async function getEarnings(req, res, next) {
   try {
     const { fid } = req.params;
@@ -63,7 +57,6 @@ async function getEarnings(req, res, next) {
   }
 }
 
-// GET /api/creator/earnings/address/:address
 async function getEarningsByAddress(req, res, next) {
   try {
     const { address } = req.params;
@@ -81,7 +74,6 @@ async function getEarningsByAddress(req, res, next) {
   }
 }
 
-// GET /api/creator/slots/:fid
 async function getSlots(req, res, next) {
   try {
     const { fid } = req.params;
