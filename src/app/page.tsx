@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { ListSlotButton } from "@/components/ListSlotButton";
 import { SupportButton } from "@/components/SupportButton";
+import { TrustSection } from "@/components/TrustSection";
+import { SampleSlots } from "@/components/SampleSlots";
+import { SocialProof } from "@/components/SocialProof";
 
 export default function HomePage() {
   return (
@@ -15,12 +18,18 @@ export default function HomePage() {
               Live on Base Sepolia
             </div>
           </div>
+          <p className="text-sm text-text-secondary uppercase tracking-wide">
+            CastFlow — The Farcaster Ad Marketplace
+          </p>
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-primary via-purple to-accent bg-clip-text text-transparent leading-tight">
             Turn your casts into income
           </h1>
           <p className="text-xl text-text-secondary max-w-xl mx-auto">
             CastFlow lets Farcaster creators list sponsored cast slots and lets
             advertisers book them directly. Payments settle on Base in ETH.
+          </p>
+          <p className="text-sm text-text-secondary font-mono">
+            List → Advertiser books → Creator posts → Settle in ETH → Cast stays live
           </p>
           <div className="flex gap-4 justify-center flex-wrap pt-2">
             <Link href="/creator">
@@ -35,26 +44,16 @@ export default function HomePage() {
           </p>
         </div>
 
+        <SocialProof />
+
         {/* List a slot — the real, working action */}
         <div className="rounded-xl border border-border-subtle bg-surface p-4 max-w-md mx-auto">
           <ListSlotButton />
         </div>
 
-        {/* Sample listing card */}
-        <div className="bg-black/20 rounded-xl p-6 max-w-md mx-auto">
-          <p className="text-xs text-text-secondary mb-3 uppercase tracking-wide">
-            Example listing
-          </p>
-          <h2 className="text-lg font-semibold text-primary mb-3">Sponsored Cast Slot</h2>
-          <dl className="space-y-1.5 text-sm">
-            <div className="flex justify-between"><dt className="text-text-secondary">Creator</dt><dd>Base Builder</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Audience</dt><dd>Farcaster / Base / NFTs</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Price</dt><dd className="text-accent font-semibold">0.05 ETH</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Deliverable</dt><dd>1 cast</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Payment</dt><dd>Manual payout during beta</dd></div>
-            <div className="flex justify-between"><dt className="text-text-secondary">Status</dt><dd className="text-green-400">Available</dd></div>
-          </dl>
-        </div>
+        <SampleSlots />
+
+        <TrustSection />
 
         {/* How it works */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
