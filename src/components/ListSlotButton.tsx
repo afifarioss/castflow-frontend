@@ -21,8 +21,7 @@ type Status =
 export function ListSlotButton() {
   const [address, setAddress] = useState<string | null>(null);
   const [price, setPrice] = useState('0.001');
-  const [duration, setDuration] = useState('86400');
-  const [metadata, setMetadata] = useState('');
+  const [description, setDescription] = useState('');
   const [status, setStatus] = useState<Status>({ phase: 'idle' });
 
   useEffect(() => {
@@ -52,10 +51,8 @@ export function ListSlotButton() {
 
   const validate = (): string | null => {
     const priceNum = Number(price);
-    const durationNum = Number(duration);
     if (!price || Number.isNaN(priceNum) || priceNum <= 0) return 'Enter a price greater than 0 (in ETH).';
-    if (!duration || !Number.isInteger(durationNum) || durationNum <= 0) return 'Enter a duration greater than 0 (in seconds).';
-    if (!metadata.trim()) return 'Enter a description for the slot.';
+    if (!description.trim()) return 'Enter a description for the slot.';
     return null;
   };
 
@@ -90,7 +87,7 @@ export function ListSlotButton() {
       const res = await fetch('/api/contract/list-slot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ price, duration: Number(duration), metadata: metadata.trim() }),
+        body: JSON.stringify({ price, description: description.trim() }),
       });
       const payload = await res.json();
       if (!res.ok) {
@@ -135,13 +132,8 @@ export function ListSlotButton() {
           disabled={isBusy} className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-white" />
       </label>
       <label className="flex flex-col gap-1 text-sm text-gray-300">
-        Duration (seconds)
-        <input type="number" step="1" min="1" value={duration} onChange={(e) => setDuration(e.target.value)}
-          disabled={isBusy} className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-white" />
-      </label>
-      <label className="flex flex-col gap-1 text-sm text-gray-300">
-        Slot description
-        <textarea value={metadata} onChange={(e) => setMetadata(e.target.value)} disabled={isBusy} rows={2}
+        Description
+        <textarea value={description} onChange={(e) => setDescription(e.target.value)} disabled={isBusy} rows={2}
           placeholder="e.g. Sponsored cast in my next thread"
           className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-white" />
       </label>
